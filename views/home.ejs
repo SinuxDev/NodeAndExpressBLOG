@@ -1,0 +1,24 @@
+<%- include("./includes/head") %>
+    <h1 class="title">HomePage</h1>
+    <p class="description">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
+      suscipit, repellendus tempore cupiditate neque, enim quasi nisi
+      reprehenderit, consequatur commodi esse? Quaerat illo sint modi libero
+      enim placeat veritatis quia.
+    </p>
+    <a href="/admin/create-post">Add A New Post</a>
+    <hr />
+    <h1 class="title">Post</h1>
+    <% if(postsArr.length === 0) { %>
+    <div>
+      <h4>Nothing Somethin IDK</h4>
+      <p>Create a post now!!</p>
+      <a href="/admin/create-post">Create New Post</a>
+    </div>
+    <% } %> <% for(let post of postsArr){ %>
+    <div class="post-box">
+      <p class="post-title"><%= post.title %></p>
+      <p class="post-des"><%= post.description %></p>
+    </div>
+    <% } %>
+    <%- include("./includes/foot") %>

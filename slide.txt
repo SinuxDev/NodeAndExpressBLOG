@@ -1,0 +1,9 @@
+templatin engines
+
+ejs,jade(pug),handlebars
+
+ejs
+
+How Does ejs work?
+
+node server data + templating engines => html->file (with dynamic content)

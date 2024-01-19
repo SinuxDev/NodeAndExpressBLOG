@@ -23,7 +23,7 @@ exports.renderCreatePage = (req, res) => {
 };
 
 exports.getPosts = (req, res) => {
-  Posts.findAll()
+  Posts.findAll({ order: [["title", "asc"]] })
     .then((post) => {
       res.render("home", { title: "Home Page", postsArr: post });
     })
@@ -43,4 +43,45 @@ exports.getPostDetails = (req, res) => {
   //   res.render("details", { title: "I'm Details Page", post });
   // })
   // .catch((err) => console.log(err));
+};
+
+exports.deletePost = (req, res) => {
+  const postId = req.params.postId;
+  Posts.findByPk(postId)
+    .then((post) => {
+      if (!post) {
+        res.redirect("/");
+      }
+      return post.destroy();
+    })
+    .then((result) => {
+      console.log("Post Deleted!!!");
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getOldPost = (req, res) => {
+  const postId = req.params.postId;
+  Posts.findByPk(postId)
+    .then((post) => {
+      res.render("editPost", { title: `${post.title}`, post });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.UpdatePost = (req, res) => {
+  const { title, description, photo, postId } = req.body;
+  Posts.findByPk(postId)
+    .then((post) => {
+      post.title = title;
+      post.description = description;
+      post.imgUrl = photo;
+      return post.save();
+    })
+    .then((result) => {
+      console.log(`Post id => ${postId} is updated successfully`);
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
 };

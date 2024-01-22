@@ -4,6 +4,9 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const sequelize = require("./utils/database");
 
+const Post = require("./models/post");
+const User = require("./models/user");
+
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -33,10 +36,21 @@ app.use("/admin", adminRoutes);
 app.use(postRoutes);
 
 //Connect Database with Sequelize
+Post.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Post);
 sequelize
   .sync()
   .then((result) => {
-    console.log(result);
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({ name: "Khin", email: "khin@gmail.com" });
+    }
+    return user;
+  })
+  .then((user) => {
+    console.log(user);
     app.listen(8080);
   })
   .catch((err) => console.log(err));

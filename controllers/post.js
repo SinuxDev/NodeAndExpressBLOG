@@ -1,6 +1,6 @@
 // const posts = [];
 
-const Posts = require("../models/posts");
+const Posts = require("../models/post");
 
 exports.createPost = (req, res) => {
   const { title, description, photo } = req.body;

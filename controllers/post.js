@@ -1,16 +1,13 @@
 const posts = [];
+const Post = require("../models/post");
 
 exports.createPost = (req, res) => {
   const { title, description, photo } = req.body;
-  console.log(`Title Value is ${title} & description is ${description}`);
-  posts.push({
-    id: Math.random(),
-    title,
-    description,
-    photo,
-  });
-  console.log(posts);
-  res.redirect("/");
+  const post = new Post(title, description, photo);
+  post
+    .create()
+    .then((result) => console.log(result))
+    .catch((err) => console.log(err));
 };
 
 exports.renderCreatePage = (req, res) => {

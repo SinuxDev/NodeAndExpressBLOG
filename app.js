@@ -9,7 +9,8 @@ app.set("views", "views");
 const postRoutes = require("./routes/post");
 const adminRoutes = require("./routes/admin");
 
-const mongodbConnector = require("./utils/database");
+//Import From Database
+const { mongodbConnector } = require("./utils/database");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -5,7 +5,7 @@ class Post {
     this.title = title;
     this.description = description;
     this.imgUrl = imgUrl;
-    this._id = new mongoDb.ObjectId(id);
+    this._id = id ? new mongoDb.ObjectId(id) : null;
   }
 
   create() {
@@ -28,8 +28,9 @@ class Post {
   static getPosts() {
     const db = getDataBase();
     return db
-      .collection("posts")
+      .collection("posts", { locale: "en", caseLevel: true })
       .find()
+      .sort({ title: 1 })
       .toArray()
       .then((posts) => {
         console.log(posts);
@@ -47,6 +48,17 @@ class Post {
       .then((post) => {
         console.log(post);
         return post;
+      })
+      .catch((err) => console.log(err));
+  }
+
+  static deletePost(postId) {
+    const db = getDataBase();
+    return db
+      .collection("posts")
+      .deleteOne({ _id: new mongoDb.ObjectId(postId) })
+      .then((result) => {
+        console.log("Post Deleted");
       })
       .catch((err) => console.log(err));
   }

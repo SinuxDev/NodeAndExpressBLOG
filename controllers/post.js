@@ -58,3 +58,13 @@ exports.updatePost = (req, res) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.deletePost = (req, res) => {
+  const postId = req.params.postId;
+  Post.deletePost(postId)
+    .then((result) => {
+      console.log("Post Deleted");
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
+};

@@ -13,4 +13,6 @@ routes.get("/edit/:postId", postController.getEditPost);
 
 routes.post("/edit-post", postController.updatePost);
 
+routes.post("/delete/:postId", postController.deletePost);
+
 module.exports = routes;

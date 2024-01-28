@@ -18,6 +18,6 @@
 <% } %> <% for(let post of postsArr){ %>
 <div class="post-box">
   <p class="post-title"><%= post.title %></p>
-  <a href="/post/<%= post.id %>" class="btn">See More...</a>
+  <a href="/post/<%= post._id %>" class="btn">See More...</a>
 </div>
 <% } %> <%- include("./includes/foot") %>

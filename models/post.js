@@ -1,17 +1,26 @@
 const mongoDb = require("mongodb");
 const { getDataBase } = require("../utils/database");
 class Post {
-  constructor(title, description, imgUrl) {
+  constructor(title, description, imgUrl, id) {
     this.title = title;
     this.description = description;
     this.imgUrl = imgUrl;
+    this._id = new mongoDb.ObjectId(id);
   }
 
   create() {
     const db = getDataBase();
-    return db
-      .collection("posts")
-      .insertOne(this)
+    let dbTmp;
+
+    if (this._id) {
+      //update post
+      dbTmp = db
+        .collection("posts")
+        .updateOne({ _id: this._id }, { $set: this });
+    } else {
+      dbTmp = db.collection("posts").insertOne(this); // create
+    }
+    return dbTmp
       .then((result) => console.log(result))
       .catch((err) => console.log(err));
   }

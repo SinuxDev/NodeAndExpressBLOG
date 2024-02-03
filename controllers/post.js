@@ -34,7 +34,7 @@ exports.getPostDetails = (req, res) => {
 
 exports.getEditPost = (req, res) => {
   const postId = req.params.postId;
-  Post.getPostDetail(postId)
+  Post.findById(postId)
     .then((post) => {
       if (!post) {
         return res.redirect("/");
@@ -46,10 +46,14 @@ exports.getEditPost = (req, res) => {
 
 exports.updatePost = (req, res) => {
   const { title, description, photo, postId } = req.body;
-  const post = new Post(title, description, photo, postId);
 
-  post
-    .create()
+  Post.findById(postId)
+    .then((post) => {
+      post.title = title;
+      post.description = description;
+      post.imgUrl = photo;
+      return post.save();
+    })
     .then((result) => {
       console.log("Post Updated");
       res.redirect("/");

@@ -19,6 +19,7 @@ exports.renderHomePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "homepage.html"));
 
   Post.find()
+    .sort({ title: 1 })
     .then((posts) =>
       res.render("home", { title: "Hello World", postsArr: posts })
     )
@@ -63,7 +64,7 @@ exports.updatePost = (req, res) => {
 
 exports.deletePost = (req, res) => {
   const postId = req.params.postId;
-  Post.deletePost(postId)
+  Post.findByIdAndDelete(postId)
     .then((result) => {
       console.log("Post Deleted");
       res.redirect("/");

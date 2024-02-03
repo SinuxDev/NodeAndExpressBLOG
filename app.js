@@ -17,6 +17,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/admin", adminRoutes);
 app.use(postRoutes);
 
+app.use((req, res, next) => {
+  console.log("Parent Middleware!!!");
+  next();
+});
+
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => {

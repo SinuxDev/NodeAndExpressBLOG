@@ -2,9 +2,7 @@ const Post = require("../models/post");
 
 exports.createPost = (req, res) => {
   const { title, description, photo } = req.body;
-  const post = new Post(title, description, photo);
-  post
-    .create()
+  Post.create({ title, description, imgUrl: photo })
     .then((result) => {
       console.log(result);
       res.redirect("/");
@@ -20,7 +18,7 @@ exports.renderCreatePage = (req, res) => {
 exports.renderHomePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "homepage.html"));
 
-  Post.getPosts()
+  Post.find()
     .then((posts) =>
       res.render("home", { title: "Hello World", postsArr: posts })
     )
@@ -29,7 +27,7 @@ exports.renderHomePage = (req, res) => {
 
 exports.getPostDetails = (req, res) => {
   const postId = req.params.postId;
-  Post.getPostDetail(postId)
+  Post.findById(postId)
     .then((post) => res.render("details", { title: post.title, post }))
     .catch((err) => console.log(err));
 };

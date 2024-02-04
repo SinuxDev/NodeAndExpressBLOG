@@ -16,16 +16,15 @@ const User = require("./models/user");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/admin", adminRoutes);
-app.use(postRoutes);
-
 app.use((req, res, next) => {
   User.findById("65bf2fa63c1cb350838ccaf2").then((user) => {
-    req.user = user;
-    console.log(user);
+    req.users = user;
     next();
   });
 });
+
+app.use("/admin", adminRoutes);
+app.use(postRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URL)

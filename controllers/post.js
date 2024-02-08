@@ -17,7 +17,7 @@ exports.renderCreatePage = (req, res) => {
 
 exports.renderHomePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "homepage.html"));
-  const cookie = req.get("Cookie");
+  const cookie = req.get("Cookie").split("=")[1].trim() == "true";
   console.log(cookie);
   Post.find()
     .select("title")
@@ -25,7 +25,11 @@ exports.renderHomePage = (req, res) => {
     .sort({ title: 1 })
     .then((posts) => {
       console.log(posts);
-      res.render("home", { title: "Hello World", postsArr: posts });
+      res.render("home", {
+        title: "Hello World",
+        postsArr: posts,
+        isLogin: cookie,
+      });
     })
     .catch((err) => console.log(err));
 };

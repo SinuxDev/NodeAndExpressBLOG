@@ -6,8 +6,11 @@
   consequatur commodi esse? Quaerat illo sint modi libero enim placeat veritatis
   quia.
 </p>
+<% if(isLogin) {%>
 <a href="/admin/create-post">Add A New Post</a>
+<%}else {%>
 <a href="/login">Create a new account</a>
+<% } %>
 <hr />
 <h1 class="title">Post</h1>
 <% if(postsArr.length === 0) { %>

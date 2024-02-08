@@ -1,26 +1,17 @@
 <%- include("../includes/head") %>
 <section class="mx-auto">
   <a href="/">GoBack Home</a>
-  <h1 class="title">Add Post</h1>
-  <form action="/admin" method="POST">
+  <h1 class="title">Add a new account here!!</h1>
+  <form action="/login" method="POST">
     <div>
-      <label for="title">Enter Title</label>
-      <input type="text" id="title" name="title" required />
+      <label for="email">Enter Email</label>
+      <input type="text" id="email" name="email" />
     </div>
     <div>
-      <label for="photo">Enter Photo</label>
-      <input type="text" id="photo" name="photo" required />
+      <label for="password">Enter Password</label>
+      <input type="password" id="password" name="password" />
     </div>
-    <div>
-      <label for="description">Enter Description</label>
-      <textarea
-        name="description"
-        id="description"
-        cols="30"
-        rows="10"
-      ></textarea>
-    </div>
-    <button>Add Post</button>
+    <button>Create Account</button>
   </form>
 </section>
 <%- include("../includes/foot") %>

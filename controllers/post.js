@@ -17,7 +17,8 @@ exports.renderCreatePage = (req, res) => {
 
 exports.renderHomePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "homepage.html"));
-
+  const cookie = req.get("Cookie");
+  console.log(cookie);
   Post.find()
     .select("title")
     .populate("userId", "username")

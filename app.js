@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const ExpressSession = require("express-session");
+const mongoStore = require("connect-mongodb-session")(ExpressSession);
 
 const app = express();
 app.set("view engine", "ejs");
@@ -15,6 +16,11 @@ const authRoutes = require("./routes/auth");
 
 const User = require("./models/user");
 
+const store = new mongoStore({
+  uri: process.env.MONGODB_URI,
+  collection: "mySessions",
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
@@ -22,6 +28,7 @@ app.use(
     secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: false,
+    store,
   })
 );
 

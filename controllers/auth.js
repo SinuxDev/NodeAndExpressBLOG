@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 //render register page
 exports.getRegisterPage = (req, res) => {
@@ -13,12 +14,18 @@ exports.createRegisterAccount = (req, res) => {
       if (user) {
         return res.redirect("/register");
       }
-      return User.create({
-        email,
-        password,
-      }).then((_) => {
-        res.redirect("/login");
-      });
+
+      return bcrypt
+        .hash(password, 10)
+        .then((hashPass) => {
+          return User.create({
+            email,
+            password: hashPass,
+          });
+        })
+        .then((_) => {
+          res.redirect("/login");
+        });
     })
     .catch((err) => console.log(err));
 };
@@ -30,8 +37,28 @@ exports.getLoginPage = (req, res) => {
 
 // handle login
 exports.postLoginData = (req, res) => {
-  req.session.isLogin = true;
-  res.redirect("/");
+  // req.session.isLogin = true;
+  // res.redirect("/");
+
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.redirect("/login");
+      }
+      bcrypt.compare(password, user.password).then((isMatch) => {
+        if (isMatch) {
+          req.session.isLogin = true;
+          req.session.userInfo = user;
+          return req.session.save((err) => {
+            res.redirect("/");
+            console.log(err);
+          });
+        }
+        res.redirect("/login");
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 // handle logout

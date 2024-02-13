@@ -32,12 +32,12 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  User.findById("65bf2fa63c1cb350838ccaf2").then((user) => {
-    req.users = user;
-    next();
-  });
-});
+// app.use((req, res, next) => {
+//   User.findById("65bf2fa63c1cb350838ccaf2").then((user) => {
+//     req.users = user;
+//     next();
+//   });
+// });
 
 app.use("/admin", adminRoutes);
 app.use(postRoutes);
@@ -49,5 +49,4 @@ mongoose
     app.listen(8080);
     console.log("Connected to MongoDB");
   })
-  .then((result) => console.log(result))
   .catch((err) => console.log(err));

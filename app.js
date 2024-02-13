@@ -14,8 +14,6 @@ const postRoutes = require("./routes/post");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 
-const User = require("./models/user");
-
 const store = new mongoStore({
   uri: process.env.MONGODB_URI,
   collection: "mySessions",

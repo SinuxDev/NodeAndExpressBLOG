@@ -9,6 +9,7 @@
 <% if(isLogin) {%>
 <a href="/admin/create-post">Add A New Post</a>
 <form action="/logout" method="post">
+  <input value="<%= csrfToken %>" name="_csrf" hidden />
   <button>Logout</button>
 </form>
 <%}else {%>

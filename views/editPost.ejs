@@ -3,6 +3,7 @@
   <a href="/">GoBack Home</a>
   <h1 class="title">Add Post</h1>
   <form action="/admin/edit-post" method="POST">
+    <input value="<%= csrfToken %>" name="_csrf" hidden />
     <input type="text" value="<%= post._id %>" name="postId" hidden />
     <div>
       <label for="title">Enter Title</label>

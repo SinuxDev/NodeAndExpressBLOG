@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const ExpressSession = require("express-session");
 const mongoStore = require("connect-mongodb-session")(ExpressSession);
+const csrf = require("csurf");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -24,6 +25,8 @@ const store = new mongoStore({
   collection: "mySessions",
 });
 
+const csrfProtect = csrf();
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
@@ -34,6 +37,8 @@ app.use(
     store,
   })
 );
+
+app.use(csrfProtect);
 
 app.use((req, res, next) => {
   if (req.session.isLogin == undefined) {
@@ -47,6 +52,13 @@ app.use((req, res, next) => {
       console.log(req.users);
       next();
     });
+});
+
+// to send CSRF Token For EveryPage Render
+app.use((req, res, next) => {
+  res.locals.isLogin = req.session.isLogin ? true : false;
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 app.use("/admin", isLogin, adminRoutes);

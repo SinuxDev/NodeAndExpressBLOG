@@ -26,7 +26,6 @@ exports.renderHomePage = (req, res) => {
       res.render("home", {
         title: "Home Page",
         postsArr: posts,
-        isLogin: req.session.isLogin ? true : false,
       });
     })
     .catch((err) => console.log(err));

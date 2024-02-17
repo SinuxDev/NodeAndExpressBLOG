@@ -20,7 +20,7 @@ exports.renderHomePage = (req, res) => {
   console.log(`Hello I'm secret key ${req.session.isLogin}`);
   Post.find()
     .select("title")
-    .populate("userId", "username")
+    .populate("userId", "email")
     .sort({ title: 1 })
     .then((posts) => {
       res.render("home", {

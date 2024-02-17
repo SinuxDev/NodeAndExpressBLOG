@@ -14,6 +14,8 @@ const postRoutes = require("./routes/post");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 
+const User = require("./models/user");
+
 const store = new mongoStore({
   uri: process.env.MONGODB_URI,
   collection: "mySessions",
@@ -30,12 +32,19 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   User.findById("65bf2fa63c1cb350838ccaf2").then((user) => {
-//     req.users = user;
-//     next();
-//   });
-// });
+app.use((req, res, next) => {
+  if (req.session.isLogin == undefined) {
+    return next();
+  }
+
+  User.findById(req.session.userInfo._id)
+    .select("_id email")
+    .then((user) => {
+      req.users = user;
+      console.log(req.users);
+      next();
+    });
+});
 
 app.use("/admin", adminRoutes);
 app.use(postRoutes);

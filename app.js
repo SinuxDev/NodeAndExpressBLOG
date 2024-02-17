@@ -16,6 +16,9 @@ const authRoutes = require("./routes/auth");
 
 const User = require("./models/user");
 
+//Middleware
+const { isLogin } = require("./middleware/is-login");
+
 const store = new mongoStore({
   uri: process.env.MONGODB_URI,
   collection: "mySessions",
@@ -46,7 +49,7 @@ app.use((req, res, next) => {
     });
 });
 
-app.use("/admin", adminRoutes);
+app.use("/admin", isLogin, adminRoutes);
 app.use(postRoutes);
 app.use(authRoutes);
 

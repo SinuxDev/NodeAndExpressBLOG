@@ -5,10 +5,14 @@
   <p><%= post.description %></p>
   <form action="/admin/delete/<%= post._id%>" method="post">
     <input value="<%= csrfToken %>" name="_csrf" hidden />
+    <% if(isLogin) {%>
     <button>Delete</button>
+    <% } %>
   </form>
+  <% if(isLogin) {%>
   <button>
     <a href="/admin/edit/<%= post._id %>" class="btn-full">Edit</a>
   </button>
+  <% } %>
 </section>
 <%- include("./includes/foot") %>

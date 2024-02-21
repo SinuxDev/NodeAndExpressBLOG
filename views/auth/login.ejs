@@ -2,6 +2,9 @@
 <section class="mx-auto">
   <a href="/">GoBack Home</a>
   <h1 class="title">Login Your Account</h1>
+  <% if(errorMsg.length){ %>
+  <p class="msg-box"><%= errorMsg %></p>
+  <% } %>
   <form action="/login" method="POST">
     <input value="<%= csrfToken %>" name="_csrf" hidden />
     <div>

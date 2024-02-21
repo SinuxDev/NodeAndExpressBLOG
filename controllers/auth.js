@@ -3,7 +3,10 @@ const bcrypt = require("bcrypt");
 
 //render register page
 exports.getRegisterPage = (req, res) => {
-  res.render("auth/register", { title: "Register Page" });
+  res.render("auth/register", {
+    title: "Register Page",
+    errorMsg: req.flash("error"),
+  });
 };
 
 //handle register
@@ -12,6 +15,7 @@ exports.createRegisterAccount = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
+        req.flash("error", "Email is already exist");
         return res.redirect("/register");
       }
 
@@ -32,7 +36,10 @@ exports.createRegisterAccount = (req, res) => {
 
 // render logic page
 exports.getLoginPage = (req, res) => {
-  res.render("auth/login", { title: "Login Page" });
+  res.render("auth/login", {
+    title: "Login Page",
+    errorMsg: req.flash("error"),
+  });
 };
 
 // handle login
@@ -44,6 +51,7 @@ exports.postLoginData = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (!user) {
+        req.flash("error", "Check your information and Try Again!!"); // flash("key","value");
         return res.redirect("/login");
       }
       bcrypt.compare(password, user.password).then((isMatch) => {

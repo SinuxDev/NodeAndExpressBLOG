@@ -6,6 +6,7 @@ const dotenv = require("dotenv").config();
 const ExpressSession = require("express-session");
 const mongoStore = require("connect-mongodb-session")(ExpressSession);
 const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -39,6 +40,7 @@ app.use(
 );
 
 app.use(csrfProtect);
+app.use(flash());
 
 app.use((req, res, next) => {
   if (req.session.isLogin == undefined) {

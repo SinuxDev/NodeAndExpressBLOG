@@ -26,4 +26,10 @@ routes.get("/feedback", authController.getFeedbackPage);
 // Send reset email
 routes.post("/reset", authController.resetLinkSend);
 
+// Render new password page
+routes.get("/reset-password/:token", authController.getNewPassPage);
+
+// change new password
+routes.post("/change-new-password", authController.changeNewPassword);
+
 module.exports = routes;

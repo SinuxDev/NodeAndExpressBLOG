@@ -154,6 +154,7 @@ exports.getNewPassPage = (req, res) => {
   console.log(token);
   User.findOne({
     resetToken: token,
+    tokenExpiration: { $gt: Date.now() },
   })
     .then((user) => {
       if (user) {

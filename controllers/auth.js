@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config();
+const crypto = require("crypto");
 
 const nodeMailer = require("nodemailer");
 const transporter = nodeMailer.createTransport({
@@ -53,7 +54,7 @@ exports.createRegisterAccount = (req, res) => {
     .catch((err) => console.log(err));
 };
 
-// render logic page
+// render login page
 exports.getLoginPage = (req, res) => {
   res.render("auth/login", {
     title: "Login Page",
@@ -92,5 +93,57 @@ exports.postLoginData = (req, res) => {
 exports.logout = (req, res) => {
   req.session.destroy((_) => {
     res.redirect("/");
+  });
+};
+
+//Render Reset-Password-Page
+exports.getResetPage = (req, res) => {
+  res.render("auth/reset", {
+    title: "Reset Password Page",
+    errorMsg: req.flash("error"),
+  });
+};
+
+//Render Feedback page
+exports.getFeedbackPage = (req, res) => {
+  res.render("auth/feedback", {
+    title: "Feedback Page",
+  });
+};
+
+// reset-password sent
+exports.resetLinkSend = (req, res) => {
+  const { email } = req.body;
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/reset-password");
+    }
+
+    const token = buffer.toString("hex");
+    User.findOne({ email })
+      .then((user) => {
+        if (!user) {
+          req.flash("error", "No Account found with this email!!");
+          return res.redirect("/reset-password");
+        }
+
+        user.resetToken = token;
+        user.tokenExpiration = Date.now() + 1800000;
+        return user.save();
+      })
+      .then((result) => {
+        res.redirect("/feedback");
+        transporter.sendMail(
+          {
+            from: process.env.SENDER_MAIL,
+            to: email,
+            subject: "Reset Password",
+            html: `<h1>Reset Password Now</h1><p>Change Your password. Is that you or not?. Bitch! I don't care. Just click the link below</p><a href="http://localhost:8080/reset-password/${token}">Clik Me To Change Your Password</a>`,
+          },
+          (err) => console.log(err)
+        );
+      })
+      .catch((err) => console.log(err));
   });
 };

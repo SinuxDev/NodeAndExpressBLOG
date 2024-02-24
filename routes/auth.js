@@ -17,4 +17,13 @@ routes.post("/login", authController.postLoginData);
 // Handle Logout Page
 routes.post("/logout", authController.logout);
 
+// Render reset-password-page
+routes.get("/reset-password", authController.getResetPage);
+
+// Render feedback Page
+routes.get("/feedback", authController.getFeedbackPage);
+
+// Send reset email
+routes.post("/reset", authController.resetLinkSend);
+
 module.exports = routes;

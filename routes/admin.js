@@ -4,7 +4,7 @@ const path = require("path");
 const routes = express.Router();
 const postController = require("../controllers/post");
 
-// /adin/create-post
+// /admin/create-post
 routes.get("/create-post", postController.renderCreatePage);
 
 routes.post("/", postController.createPost);

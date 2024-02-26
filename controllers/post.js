@@ -36,7 +36,15 @@ exports.renderHomePage = (req, res) => {
 exports.getPostDetails = (req, res) => {
   const postId = req.params.postId;
   Post.findById(postId)
-    .then((post) => res.render("details", { title: post.title, post }))
+    .then((post) =>
+      res.render("details", {
+        title: post.title,
+        post,
+        currentLoginUserId: req.session.userInfo
+          ? req.session.userInfo._id
+          : "",
+      })
+    )
     .catch((err) => console.log(err));
 };
 

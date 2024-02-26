@@ -17,7 +17,7 @@ exports.createPost = (req, res) => {
 };
 
 exports.renderCreatePage = (req, res) => {
-  res.render("addPost", { title: "Post Create Shin" });
+  res.render("addPost", { title: "Post Create Page" });
 };
 
 exports.getPosts = (req, res) => {
@@ -26,7 +26,7 @@ exports.getPosts = (req, res) => {
   Posts.getAllPost()
     .then(([rows]) => {
       console.log(rows);
-      res.render("home", { title: "Hello World", postsArr: rows });
+      res.render("home", { title: "Home Page", postsArr: rows });
     })
     .catch((err) => console.log(err));
 };
@@ -36,7 +36,7 @@ exports.getPostDetails = (req, res) => {
   console.log(postId);
   Posts.getSinglePost(postId)
     .then(([row]) => {
-      res.render("details", { title: "I'm Details Page", post: row[0] });
+      res.render("details", { title: "Details Page", post: row[0] });
     })
     .catch((err) => console.log(err));
 };

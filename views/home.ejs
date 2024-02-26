@@ -7,7 +7,9 @@
   quia.
 </p>
 <% if(isLogin) {%>
-<a href="/admin/create-post">Add A New Post</a>
+<a href="/admin/create-post"
+  >Add A New Post as <%=currentUserEmail ? currentUserEmail : "" %></a
+>
 <form action="/logout" method="post">
   <input value="<%= csrfToken %>" name="_csrf" hidden />
   <button>Logout</button>
@@ -18,7 +20,7 @@
 <% } %>
 <hr />
 <h1 class="title">Post</h1>
-<% if(postsArr.length === 0) { %>
+<% if(postsArr.length === 0 && isLogin) { %>
 <div>
   <h4>Nothing Somethin IDK</h4>
   <p>Create a post now!!</p>

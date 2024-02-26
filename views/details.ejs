@@ -1,18 +1,21 @@
 <%- include("./includes/head") %>
 <section class="details">
-  <h1><%= post.title %></h1>
-  <img src="<%= post.imgUrl %>" alt="<% post.title %>" />
-  <p><%= post.description %></p>
+  <div class="details-div">
+    <h1 class="title"><%= post.title %></h1>
+    <a href="/">Go Back</a>
+  </div>
+  <img src="<%= post.imgUrl %>" alt="<% post.title %>" class="det-img" />
+  <p class="det-des"><%= post.description %></p>
   <% if(post.userId.toString() == currentLoginUserId.toString()) { %>
   <form action="/admin/delete/<%= post._id%>" method="post">
     <input value="<%= csrfToken %>" name="_csrf" hidden />
     <% if(isLogin) {%>
-    <button>Delete</button>
+    <button class="del-btn">Delete</button>
     <% } %>
   </form>
   <% if(isLogin) {%>
-  <button>
-    <a href="/admin/edit/<%= post._id %>" class="btn-full">Edit</a>
+  <button class="edit-btn">
+    <a href="/admin/edit/<%= post._id %>">Edit</a>
   </button>
   <% } %> <% } %>
 </section>

@@ -17,7 +17,7 @@ exports.createPost = (req, res) => {
 };
 
 exports.renderCreatePage = (req, res) => {
-  res.render("addPost", { title: "Post Create Page" });
+  res.render("addPost", { title: "Shin Create" });
 };
 
 exports.getPosts = (req, res) => {

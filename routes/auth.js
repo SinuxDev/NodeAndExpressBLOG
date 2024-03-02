@@ -1,12 +1,28 @@
 const express = require("express");
 const routes = express.Router();
 const authController = require("../controllers/auth");
-
+const { check } = require("express-validator");
+const User = require("../models/user");
 //Register Page
 routes.get("/register", authController.getRegisterPage);
 
 // Handle Register Page
-routes.post("/register", authController.createRegisterAccount);
+routes.post(
+  "/register",
+  check("email")
+    .isEmail()
+    .withMessage("Please Enter Valid Email Address")
+    .custom((value, { req }) => {
+      return User.findOne({ email: value }).then((user) => {
+        if (user) {
+          return Promise.reject(
+            "Email is already exists. Please Enter another email to register"
+          );
+        }
+      });
+    }),
+  authController.createRegisterAccount
+);
 
 // Render Login Page
 routes.get("/login", authController.getLoginPage);

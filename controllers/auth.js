@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config();
 const crypto = require("crypto");
+const { validationResult } = require("express-validator");
 
 const nodeMailer = require("nodemailer");
 const transporter = nodeMailer.createTransport({
@@ -23,33 +24,34 @@ exports.getRegisterPage = (req, res) => {
 //handle register
 exports.createRegisterAccount = (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        req.flash("error", "Email is already exist");
-        return res.redirect("/register");
-      }
 
-      return bcrypt
-        .hash(password, 10)
-        .then((hashPass) => {
-          return User.create({
-            email,
-            password: hashPass,
-          });
-        })
-        .then((_) => {
-          res.redirect("/login");
-          transporter.sendMail(
-            {
-              from: process.env.SENDER_MAIL,
-              to: email,
-              subject: "Register Successful",
-              html: "<h1>Register account successfully</h1><p>Someone use this accuont to register our website sinuxBLOG </p>",
-            },
-            (err) => console.log(err)
-          );
-        });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/register", {
+      title: "Register Page",
+      errorMsg: errors.array()[0].msg,
+    });
+  }
+
+  bcrypt
+    .hash(password, 10)
+    .then((hashPass) => {
+      return User.create({
+        email,
+        password: hashPass,
+      });
+    })
+    .then((_) => {
+      res.redirect("/login");
+      transporter.sendMail(
+        {
+          from: process.env.SENDER_MAIL,
+          to: email,
+          subject: "Register Successful",
+          html: "<h1>Register account successfully</h1><p>Someone use this accuont to register our website sinuxBLOG </p>",
+        },
+        (err) => console.log(err)
+      );
     })
     .catch((err) => console.log(err));
 };

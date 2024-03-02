@@ -47,7 +47,11 @@ routes.post(
 routes.post("/logout", authController.logout);
 
 // Render reset-password-page
-routes.get("/reset-password", authController.getResetPage);
+routes.get(
+  "/reset-password",
+  body("email").isEmail().withMessage("Enter an valid email address"),
+  authController.getResetPage
+);
 
 // Render feedback Page
 routes.get("/feedback", authController.getFeedbackPage);

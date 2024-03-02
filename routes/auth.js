@@ -33,7 +33,15 @@ routes.post(
 routes.get("/login", authController.getLoginPage);
 
 // Handle Login Page
-routes.post("/login", authController.postLoginData);
+routes.post(
+  "/login",
+  body("email").isEmail().withMessage("Enter an valid email address"),
+  body("password")
+    .isLength({ min: 4 })
+    .trim()
+    .withMessage("Password must be valid"),
+  authController.postLoginData
+);
 
 // Handle Logout Page
 routes.post("/logout", authController.logout);
@@ -51,6 +59,21 @@ routes.post("/reset", authController.resetLinkSend);
 routes.get("/reset-password/:token", authController.getNewPassPage);
 
 // change new password
-routes.post("/change-new-password", authController.changeNewPassword);
+routes.post(
+  "/change-new-password",
+  body("password")
+    .isLength({ min: 4 })
+    .trim()
+    .withMessage("Password must have at least 4 characters"),
+  body("confirm_password")
+    .trim()
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("MotherFucker check your password again!!Please Sir!");
+      }
+      return true;
+    }),
+  authController.changeNewPassword
+);
 
 module.exports = routes;

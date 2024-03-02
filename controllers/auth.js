@@ -63,6 +63,7 @@ exports.getLoginPage = (req, res) => {
   res.render("auth/login", {
     title: "Login Page",
     errorMsg: req.flash("error"),
+    oldFormData: { email: "", password: "" },
   });
 };
 
@@ -72,11 +73,23 @@ exports.postLoginData = (req, res) => {
   // res.redirect("/");
 
   const { email, password } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", {
+      title: "Login Page",
+      errorMsg: errors.array()[0].msg,
+      oldFormData: { email, password },
+    });
+  }
+
   User.findOne({ email })
     .then((user) => {
       if (!user) {
-        req.flash("error", "Check your information and Try Again!!"); // flash("key","value");
-        return res.redirect("/login");
+        return res.status(422).render("auth/login", {
+          title: "Login Page",
+          errorMsg: "Please enter valid email and password",
+          oldFormData: { email, password },
+        });
       }
       bcrypt.compare(password, user.password).then((isMatch) => {
         if (isMatch) {
@@ -87,7 +100,11 @@ exports.postLoginData = (req, res) => {
             console.log(err);
           });
         }
-        res.redirect("/login");
+        res.status(422).render("auth/login", {
+          title: "Login Page",
+          errorMsg: "Please enter valid email and password",
+          oldFormData: { email, password },
+        });
       });
     })
     .catch((err) => console.log(err));
@@ -167,6 +184,7 @@ exports.getNewPassPage = (req, res) => {
           errorMsg: req.flash("error"),
           resetToken: token,
           user_id: user._id,
+          oldFormData: { password: "", confirm_password: "" },
         });
       } else {
         res.redirect("/");
@@ -179,16 +197,26 @@ exports.getNewPassPage = (req, res) => {
 exports.changeNewPassword = (req, res) => {
   let resetUser;
   const { password, confirm_password, user_id, resetToken } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/newpassword", {
+      title: "Change Password",
+      resetToken,
+      user_id,
+      errorMsg: errors.array()[0].msg,
+      oldFormData: { password, confirm_password },
+    });
+  }
+
   User.findOne({
     resetToken,
     tokenExpiration: { $gt: Date.now() },
     _id: user_id,
   })
     .then((user) => {
-      if (password === confirm_password) {
-        resetUser = user;
-        return bcrypt.hash(password, 10);
-      }
+      resetUser = user;
+      return bcrypt.hash(password, 10);
     })
     .then((hasPassword) => {
       resetUser.password = hasPassword;
@@ -197,7 +225,7 @@ exports.changeNewPassword = (req, res) => {
       return resetUser.save();
     })
     .then(() => {
-      res.redirect("/login");
+      return res.redirect("/login");
     })
     .catch((err) => console.log(err));
 };

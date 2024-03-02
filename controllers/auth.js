@@ -18,6 +18,7 @@ exports.getRegisterPage = (req, res) => {
   res.render("auth/register", {
     title: "Register Page",
     errorMsg: req.flash("error"),
+    oldFormData: { email: "", password: "" },
   });
 };
 
@@ -30,6 +31,7 @@ exports.createRegisterAccount = (req, res) => {
     return res.status(422).render("auth/register", {
       title: "Register Page",
       errorMsg: errors.array()[0].msg,
+      oldFormData: { email, password },
     });
   }
 

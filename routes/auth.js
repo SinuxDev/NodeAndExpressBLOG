@@ -1,15 +1,16 @@
 const express = require("express");
 const routes = express.Router();
 const authController = require("../controllers/auth");
-const { check } = require("express-validator");
+const { body } = require("express-validator");
 const User = require("../models/user");
+
 //Register Page
 routes.get("/register", authController.getRegisterPage);
 
 // Handle Register Page
 routes.post(
   "/register",
-  check("email")
+  body("email")
     .isEmail()
     .withMessage("Please Enter Valid Email Address")
     .custom((value, { req }) => {
@@ -21,6 +22,10 @@ routes.post(
         }
       });
     }),
+  body("password")
+    .isLength({ min: 4 })
+    .trim()
+    .withMessage("Password must have at least 4 characters"),
   authController.createRegisterAccount
 );
 

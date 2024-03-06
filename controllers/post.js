@@ -1,5 +1,6 @@
 const Post = require("../models/post");
 const { validationResult } = require("express-validator");
+const { formatISO9075 } = require("date-fns");
 
 exports.createPost = (req, res) => {
   const { title, description, photo } = req.body;
@@ -49,10 +50,14 @@ exports.renderHomePage = (req, res) => {
 exports.getPostDetails = (req, res) => {
   const postId = req.params.postId;
   Post.findById(postId)
+    .populate("userId", "email")
     .then((post) =>
       res.render("details", {
         title: post.title,
         post,
+        date: post.createdAt
+          ? formatISO9075(post.createdAt, { representation: "date" })
+          : undefined,
         currentLoginUserId: req.session.userInfo
           ? req.session.userInfo._id
           : "",

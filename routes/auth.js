@@ -47,17 +47,17 @@ routes.post(
 routes.post("/logout", authController.logout);
 
 // Render reset-password-page
-routes.get(
-  "/reset-password",
-  body("email").isEmail().withMessage("Enter an valid email address"),
-  authController.getResetPage
-);
+routes.get("/reset-password", authController.getResetPage);
 
 // Render feedback Page
 routes.get("/feedback", authController.getFeedbackPage);
 
 // Send reset email
-routes.post("/reset", authController.resetLinkSend);
+routes.post(
+  "/reset",
+  body("email").isEmail().withMessage("Enter an valid email address"),
+  authController.resetLinkSend
+);
 
 // Render new password page
 routes.get("/reset-password/:token", authController.getNewPassPage);

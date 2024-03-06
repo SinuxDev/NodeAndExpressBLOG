@@ -1,7 +1,15 @@
 const Post = require("../models/post");
+const { validationResult } = require("express-validator");
 
 exports.createPost = (req, res) => {
   const { title, description, photo } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(422).render("addPost", {
+      title: "Post Create Shin",
+      oldFormData: { title, description, photo },
+    });
+  }
   Post.create({ title, description, imgUrl: photo, userId: req.users })
     .then((result) => {
       res.redirect("/");
@@ -11,7 +19,10 @@ exports.createPost = (req, res) => {
 
 exports.renderCreatePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "addPost.html"));
-  res.render("addPost", { title: "Post Create Shin" });
+  res.render("addPost", {
+    title: "Post Create Shin",
+    oldFormData: { title, description, photo },
+  });
 };
 
 exports.renderHomePage = (req, res) => {

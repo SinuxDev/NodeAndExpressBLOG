@@ -5,9 +5,10 @@ exports.createPost = (req, res) => {
   const { title, description, photo } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(422).render("addPost", {
+    return res.status(422).render("addPost", {
       title: "Post Create Shin",
-      oldData: { title, description, photo },
+      errorMsg: errors.array()[0].msg,
+      oldFormData: { title, description, photo },
     });
   }
   Post.create({ title, description, imgUrl: photo, userId: req.users })
@@ -21,7 +22,8 @@ exports.renderCreatePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "addPost.html"));
   res.render("addPost", {
     title: "Post Create Shin",
-    oldData: { title, description, photo },
+    errorMsg: "",
+    oldFormData: { title: "", description: "", photo: "" },
   });
 };
 
@@ -66,19 +68,37 @@ exports.getEditPost = (req, res) => {
       if (!post) {
         return res.redirect("/");
       }
-      res.render("editPost", { title: post.title, post });
+      res.render("editPost", {
+        title: post.title,
+        post,
+        errorMsg: "",
+        oldFormData: { title: "", description: "", photo: "" },
+        isValidationFail: false,
+      });
     })
     .catch((err) => console.log(err));
 };
 
 exports.updatePost = (req, res) => {
   const { title, description, photo, postId } = req.body;
+  const errors = validationResult(req);
 
   Post.findById(postId)
     .then((post) => {
       if (post.userId.toString() !== req.users._id.toString()) {
         return res.redirect("/");
       }
+
+      if (!errors.isEmpty()) {
+        return res.status(422).render("editPost", {
+          title,
+          post,
+          errorMsg: errors.array()[0].msg,
+          oldFormData: { title, description, photo },
+          isValidationFail: true,
+        });
+      }
+
       post.title = title;
       post.description = description;
       post.imgUrl = photo;

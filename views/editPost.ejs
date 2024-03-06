@@ -2,7 +2,10 @@
 <section class="mx-auto">
   <a href="/">GoBack Home</a>
   <h1 class="title">Add Post</h1>
-  <form action="/admin/edit-post" method="POST">
+  <% if(errorMsg.length){ %>
+  <p class="msg-box"><%= errorMsg %></p>
+  <% } %>
+  <form action="/admin/edit-post" method="POST" novalidate>
     <input value="<%= csrfToken %>" name="_csrf" hidden />
     <input type="text" value="<%= post._id %>" name="postId" hidden />
     <div>
@@ -11,8 +14,7 @@
         type="text"
         id="title"
         name="title"
-        value="<%= post.title %>"
-        required
+        value="<%= isValidationFail ? oldFormData.title : post.title %>"
       />
     </div>
     <div>
@@ -21,14 +23,13 @@
         type="text"
         id="photo"
         name="photo"
-        value="<%= post.imgUrl %>"
-        required
+        value="<%= isValidationFail ? oldFormData.photo : post.imgUrl %>"
       />
     </div>
     <div>
       <label for="description">Enter Description</label>
       <textarea name="description" id="description" cols="30" rows="10">
-<%= post.description %>"</textarea
+<%= isValidationFail ? oldFormData.description : post.description %></textarea
       >
     </div>
     <button>Update Post</button>

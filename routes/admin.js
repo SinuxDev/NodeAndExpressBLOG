@@ -10,16 +10,36 @@ routes.get("/create-post", postController.renderCreatePage);
 routes.post(
   "/",
   [
-    body("title").isLength({ min: 10 }),
-    body("photo").isURL(),
-    body("description").isLength({ min: 30 }),
+    body("title")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Title must have at least 10 words"),
+    body("photo").isURL().withMessage("Image must be a valid URL"),
+    body("description")
+      .trim()
+      .isLength({ min: 30 })
+      .withMessage("Description must have at least 30 words"),
   ],
   postController.createPost
 );
 
 routes.get("/edit/:postId", postController.getEditPost);
 
-routes.post("/edit-post", postController.updatePost);
+routes.post(
+  "/edit-post",
+  [
+    body("title")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Title must have at least 10 words"),
+    body("photo").isURL().withMessage("Image must be a valid URL"),
+    body("description")
+      .trim()
+      .isLength({ min: 30 })
+      .withMessage("Description must have at least 30 words"),
+  ],
+  postController.updatePost
+);
 
 routes.post("/delete/:postId", postController.deletePost);
 

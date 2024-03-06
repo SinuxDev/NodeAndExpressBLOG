@@ -7,7 +7,7 @@ exports.createPost = (req, res) => {
   if (!errors.isEmpty()) {
     res.status(422).render("addPost", {
       title: "Post Create Shin",
-      oldFormData: { title, description, photo },
+      oldData: { title, description, photo },
     });
   }
   Post.create({ title, description, imgUrl: photo, userId: req.users })
@@ -21,7 +21,7 @@ exports.renderCreatePage = (req, res) => {
   // res.sendFile(path.join(__dirname, "..", "views", "addPost.html"));
   res.render("addPost", {
     title: "Post Create Shin",
-    oldFormData: { title, description, photo },
+    oldData: { title, description, photo },
   });
 };
 

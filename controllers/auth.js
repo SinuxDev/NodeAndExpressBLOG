@@ -14,7 +14,7 @@ const transporter = nodeMailer.createTransport({
 });
 
 //render register page
-exports.getRegisterPage = (req, res) => {
+exports.getRegisterPage = (req, res, next) => {
   res.render("auth/register", {
     title: "Register Page",
     errorMsg: req.flash("error"),
@@ -23,7 +23,7 @@ exports.getRegisterPage = (req, res) => {
 };
 
 //handle register
-exports.createRegisterAccount = (req, res) => {
+exports.createRegisterAccount = (req, res, next) => {
   const { email, password } = req.body;
 
   const errors = validationResult(req);
@@ -55,11 +55,15 @@ exports.createRegisterAccount = (req, res) => {
         (err) => console.log(err)
       );
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Someting Went Wrong");
+      return next(error);
+    });
 };
 
 // render login page
-exports.getLoginPage = (req, res) => {
+exports.getLoginPage = (req, res, next) => {
   res.render("auth/login", {
     title: "Login Page",
     errorMsg: req.flash("error"),
@@ -68,7 +72,7 @@ exports.getLoginPage = (req, res) => {
 };
 
 // handle login
-exports.postLoginData = (req, res) => {
+exports.postLoginData = (req, res, next) => {
   // req.session.isLogin = true;
   // res.redirect("/");
 
@@ -107,18 +111,22 @@ exports.postLoginData = (req, res) => {
         });
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Someting Went Wrong");
+      return next(error);
+    });
 };
 
 // handle logout
-exports.logout = (req, res) => {
+exports.logout = (req, res, next) => {
   req.session.destroy((_) => {
     res.redirect("/");
   });
 };
 
 //Render Reset-Password-Page
-exports.getResetPage = (req, res) => {
+exports.getResetPage = (req, res, next) => {
   res.render("auth/reset", {
     title: "Reset Password Page",
     errorMsg: req.flash("error"),
@@ -127,14 +135,14 @@ exports.getResetPage = (req, res) => {
 };
 
 //Render Feedback page
-exports.getFeedbackPage = (req, res) => {
+exports.getFeedbackPage = (req, res, next) => {
   res.render("auth/feedback", {
     title: "Feedback Page",
   });
 };
 
 // handle reset-password sent
-exports.resetLinkSend = (req, res) => {
+exports.resetLinkSend = (req, res, next) => {
   const { email } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -178,12 +186,16 @@ exports.resetLinkSend = (req, res) => {
           (err) => console.log(err)
         );
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        const error = new Error("Someting Went Wrong");
+        return next(error);
+      });
   });
 };
 
 // render new-password page
-exports.getNewPassPage = (req, res) => {
+exports.getNewPassPage = (req, res, next) => {
   const { token } = req.params;
   console.log(token);
   User.findOne({
@@ -203,11 +215,15 @@ exports.getNewPassPage = (req, res) => {
         res.redirect("/");
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Someting Went Wrong");
+      return next(error);
+    });
 };
 
 // hanlde change new password
-exports.changeNewPassword = (req, res) => {
+exports.changeNewPassword = (req, res, next) => {
   let resetUser;
   const { password, confirm_password, user_id, resetToken } = req.body;
 
@@ -240,5 +256,9 @@ exports.changeNewPassword = (req, res) => {
     .then(() => {
       return res.redirect("/login");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Someting Went Wrong");
+      return next(error);
+    });
 };

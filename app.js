@@ -18,6 +18,8 @@ const authRoutes = require("./routes/auth");
 
 const User = require("./models/user");
 
+const errorController = require("./controllers/errorController");
+
 //Middleware
 const { isLogin } = require("./middleware/is-login");
 
@@ -66,6 +68,10 @@ app.use((req, res, next) => {
 app.use("/admin", isLogin, adminRoutes);
 app.use(postRoutes);
 app.use(authRoutes);
+
+//For unknown request // render 404 page
+app.all("*", errorController.get404Page);
+app.use(errorController.get500Page);
 
 mongoose
   .connect(process.env.MONGODB_URL)

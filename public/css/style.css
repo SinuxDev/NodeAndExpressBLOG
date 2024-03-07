@@ -195,3 +195,19 @@ button,
 .edit-btn a {
   text-align: center;
 }
+
+/* Error Styles */
+.four {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.four h1 {
+  font-size: 60px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

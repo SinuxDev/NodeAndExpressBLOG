@@ -4,6 +4,7 @@ const { formatISO9075 } = require("date-fns");
 
 exports.createPost = (req, res, next) => {
   const { title, description, photo } = req.body;
+  const image = req.file;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render("addPost", {

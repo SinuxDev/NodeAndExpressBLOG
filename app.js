@@ -7,6 +7,7 @@ const ExpressSession = require("express-session");
 const mongoStore = require("connect-mongodb-session")(ExpressSession);
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const multer = require("multer");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -32,6 +33,7 @@ const csrfProtect = csrf();
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ dest: "uploads" }).single("photo"));
 app.use(
   ExpressSession({
     secret: process.env.SESSION_KEY,

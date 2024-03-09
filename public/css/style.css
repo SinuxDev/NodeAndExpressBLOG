@@ -211,3 +211,7 @@ button,
   align-items: center;
   justify-content: center;
 }
+
+.noPost-Alert {
+  margin-left: 100px;
+}

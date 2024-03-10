@@ -14,6 +14,7 @@ routes.post(
       .trim()
       .isLength({ min: 10 })
       .withMessage("Title must have at least 10 words"),
+    body("photo").isMimeType("image"),
     // body("photo").isURL().withMessage("Image must be a valid URL"),
     body("description")
       .trim()

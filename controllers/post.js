@@ -3,14 +3,23 @@ const { validationResult } = require("express-validator");
 const { formatISO9075 } = require("date-fns");
 
 exports.createPost = (req, res, next) => {
-  const { title, description, photo } = req.body;
+  const { title, description } = req.body;
   const image = req.file;
   const errors = validationResult(req);
+
+  if (image == undefined) {
+    return res.status(422).render("addPost", {
+      title: "Post Create Shin",
+      errorMsg: "Image extension must be png,jpg,jpeg",
+      oldFormData: { title, description },
+    });
+  }
+
   if (!errors.isEmpty()) {
     return res.status(422).render("addPost", {
       title: "Post Create Shin",
       errorMsg: errors.array()[0].msg,
-      oldFormData: { title, description, photo },
+      oldFormData: { title, description },
     });
   }
   Post.create({ title, description, imgUrl: photo, userId: req.users })

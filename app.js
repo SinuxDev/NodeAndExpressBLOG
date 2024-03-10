@@ -8,6 +8,7 @@ const mongoStore = require("connect-mongodb-session")(ExpressSession);
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
+const fs = require("fs");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -33,7 +34,11 @@ const csrfProtect = csrf();
 
 const storageConfigure = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads");
+    const uploadFolder = "uploads";
+    if (!fs.existsSync(uploadFolder)) {
+      fs.mkdirSync(uploadFolder);
+    }
+    cb(null, uploadFolder);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -43,9 +48,10 @@ const storageConfigure = multer.diskStorage({
 
 const fileFilterConfigure = (req, file, cb) => {
   if (
-    file.mimetype == "image/png" ||
-    file.mimetype == "image/jpg" ||
-    file.mimetype == "image/jpeg"
+    file.mimetype.startsWith("image/") &&
+    (file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg")
   ) {
     cb(null, true);
   } else {
@@ -54,6 +60,8 @@ const fileFilterConfigure = (req, file, cb) => {
 };
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "uploads")));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   multer({ storage: storageConfigure, fileFilter: fileFilterConfigure }).single(

@@ -5,9 +5,14 @@ const { formatISO9075 } = require("date-fns");
 exports.createPost = (req, res, next) => {
   const { title, description } = req.body;
   const image = req.file;
+  console.log("Image info : " + JSON.stringify(image));
+  const imageDBFormat = image.path;
+  console.log(imageDBFormat);
+
   const errors = validationResult(req);
 
   if (image == undefined) {
+    console.log("No image file received.");
     return res.status(422).render("addPost", {
       title: "Post Create Shin",
       errorMsg: "Image extension must be png,jpg,jpeg",
@@ -22,7 +27,8 @@ exports.createPost = (req, res, next) => {
       oldFormData: { title, description },
     });
   }
-  Post.create({ title, description, imgUrl: photo, userId: req.users })
+
+  Post.create({ title, description, imgUrl: imageDBFormat, userId: req.users })
     .then((result) => {
       res.redirect("/");
     })

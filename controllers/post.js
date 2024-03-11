@@ -105,7 +105,7 @@ exports.getEditPost = (req, res, next) => {
         title: post.title,
         post,
         errorMsg: "",
-        oldFormData: { title: "", description: "", photo: "" },
+        oldFormData: { title: "", description: "" },
         isValidationFail: false,
       });
     })
@@ -117,8 +117,29 @@ exports.getEditPost = (req, res, next) => {
 };
 
 exports.updatePost = (req, res, next) => {
-  const { title, description, photo, postId } = req.body;
+  const { title, description, postId } = req.body;
+  const image = req.file;
   const errors = validationResult(req);
+
+  // if (image == undefined) {
+  //   return res.status(422).render("editPost", {
+  //     title,
+  //     postId,
+  //     errorMsg: "Image extension must be png,jpg,jpeg",
+  //     oldFormData: { title, description },
+  //     isValidationFail: true,
+  //   });
+  // }
+
+  // if (!errors.isEmpty()) {
+  //   return res.status(422).render("editPost", {
+  //     title,
+  //     postId,
+  //     errorMsg: errors.array()[0].msg,
+  //     oldFormData: { title, description },
+  //     isValidationFail: true,
+  //   });
+  // }
 
   Post.findById(postId)
     .then((post) => {
@@ -126,19 +147,11 @@ exports.updatePost = (req, res, next) => {
         return res.redirect("/");
       }
 
-      if (!errors.isEmpty()) {
-        return res.status(422).render("editPost", {
-          title,
-          post,
-          errorMsg: errors.array()[0].msg,
-          oldFormData: { title, description, photo },
-          isValidationFail: true,
-        });
-      }
-
       post.title = title;
       post.description = description;
-      post.imgUrl = photo;
+      if (image) {
+        post.imgUrl = image.path;
+      }
       return post.save().then((result) => {
         console.log("Post Updated");
         res.redirect("/");

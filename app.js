@@ -60,7 +60,7 @@ const fileFilterConfigure = (req, file, cb) => {
 };
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(

@@ -20,13 +20,13 @@ exports.createPost = (req, res, next) => {
     });
   }
 
-  if (!errors.isEmpty()) {
-    return res.status(422).render("addPost", {
-      title: "Post Create Shin",
-      errorMsg: errors.array()[0].msg,
-      oldFormData: { title, description },
-    });
-  }
+  // if (!errors.isEmpty()) {
+  //   return res.status(422).render("addPost", {
+  //     title: "Post Create Shin",
+  //     errorMsg: errors.array()[0].msg,
+  //     oldFormData: { title, description },
+  //   });
+  // }
 
   Post.create({ title, description, imgUrl: imageDBFormat, userId: req.users })
     .then((result) => {

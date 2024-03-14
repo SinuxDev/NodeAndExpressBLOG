@@ -2,6 +2,8 @@ const Post = require("../models/post");
 const { validationResult } = require("express-validator");
 const { formatISO9075 } = require("date-fns");
 
+const fileDelete = require("../utils/fileDelete");
+
 exports.createPost = (req, res, next) => {
   const { title, description } = req.body;
   const image = req.file;
@@ -121,16 +123,6 @@ exports.updatePost = (req, res, next) => {
   const image = req.file;
   const errors = validationResult(req);
 
-  // if (image == undefined) {
-  //   return res.status(422).render("editPost", {
-  //     title,
-  //     postId,
-  //     errorMsg: "Image extension must be png,jpg,jpeg",
-  //     oldFormData: { title, description },
-  //     isValidationFail: true,
-  //   });
-  // }
-
   // if (!errors.isEmpty()) {
   //   return res.status(422).render("editPost", {
   //     title,
@@ -150,6 +142,7 @@ exports.updatePost = (req, res, next) => {
       post.title = title;
       post.description = description;
       if (image) {
+        fileDelete(post.imgUrl);
         post.imgUrl = image.path;
       }
       return post.save().then((result) => {

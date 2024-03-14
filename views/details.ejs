@@ -8,6 +8,7 @@
   <% if(date) { %>
   <p class="tmp">Uploaded at - <%= date %></p>
   <% } %>
+  <a href="/save/<%= post._id %>">Save as PDF</a>
   <img src="<%= '/' + post.imgUrl %>" alt="<% post.title %>" class="det-img" />
   <p class="det-des desc"><%= post.description %></p>
   <% if(post.userId._id.toString() == currentLoginUserId.toString()) { %>

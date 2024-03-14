@@ -1,6 +1,9 @@
 const Post = require("../models/post");
 const { validationResult } = require("express-validator");
 const { formatISO9075 } = require("date-fns");
+const pdf = require("pdf-creator-node");
+const fs = require("fs");
+const Expresspath = require("path");
 
 const fileDelete = require("../utils/fileDelete");
 
@@ -175,6 +178,75 @@ exports.deletePost = (req, res, next) => {
     .catch((err) => {
       console.log(err);
       const error = new Error("Someting Went Wrong");
+      return next(error);
+    });
+};
+
+exports.savePostAsPDF = (req, res, next) => {
+  const id = req.params.id;
+  const templateURL = `${Expresspath.join(
+    __dirname,
+    "../views/template",
+    "template.html"
+  )}`;
+  const html = fs.readFileSync(templateURL, "utf8");
+  const options = {
+    format: "A3",
+    orientation: "portrait",
+    border: "10mm",
+    header: {
+      height: "45mm",
+      contents:
+        '<div style="text-align: center;">PDF Download From SHINBLOG</div>',
+    },
+    footer: {
+      height: "28mm",
+      contents: {
+        first: "Cover page",
+        contents:
+          '<span style="color: #444; text-align: center;">@sinux</span>',
+      },
+    },
+  };
+  Post.findById(id)
+    .populate("userId", "email")
+    .lean()
+    .then((post) => {
+      const date = new Date();
+      const pdfSaveURL = `${Expresspath.join(
+        __dirname,
+        "../public/pdf",
+        date.getTime() + ".pdf"
+      )}`;
+      const document = {
+        html,
+        data: {
+          post,
+        },
+        path: pdfSaveURL,
+        type: "",
+      };
+      pdf
+        .create(document, options)
+        .then((pdfResult) => {
+          console.log(pdfResult);
+          res.download(pdfSaveURL, (err) => {
+            if (err) {
+              console.log(err);
+              const error = new Error("Something went wrong");
+              return next(error);
+            }
+            fileDelete(pdfSaveURL); // Delete the PDF file after it's downloaded
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          next(error);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Something went wrong");
       return next(error);
     });
 };

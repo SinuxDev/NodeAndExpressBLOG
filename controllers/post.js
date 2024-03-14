@@ -159,7 +159,15 @@ exports.updatePost = (req, res, next) => {
 
 exports.deletePost = (req, res, next) => {
   const postId = req.params.postId;
-  Post.deleteOne({ _id: postId, userId: req.users._id })
+
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        return res.redirect("/");
+      }
+      fileDelete(post.imgUrl);
+      return Post.deleteOne({ _id: postId, userId: req.users._id });
+    })
     .then(() => {
       console.log("Post Deleted");
       res.redirect("/");

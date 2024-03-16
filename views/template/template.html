@@ -4,17 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PDF Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Madimi+One&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <h1>{{post.title}}</h1>
     <p>{{post.userId.email}}</p>
     <img
       src="http://localhost:8080/{{post.imgUrl}}"
-      height="300px"
-      width="300px"
+      height="500"
+      width="100%"
       alt="{{post.title}}"
       class="det-img"
     />
-    <p>{{post.description}}</p>
+    <p
+      style="
+        font-family: 'Madimi One', sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        text-align: justify;
+      "
+    >
+      {{post.description}}
+    </p>
   </body>
 </html>

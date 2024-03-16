@@ -195,17 +195,9 @@ exports.savePostAsPDF = (req, res, next) => {
     orientation: "portrait",
     border: "10mm",
     header: {
-      height: "45mm",
+      height: "20mm",
       contents:
-        '<div style="text-align: center;">PDF Download From SHINBLOG</div>',
-    },
-    footer: {
-      height: "28mm",
-      contents: {
-        first: "Cover page",
-        contents:
-          '<span style="color: #444; text-align: center;">@sinux</span>',
-      },
+        '<h4 style="text-align: center;">PDF Download From SHINBLOG</h4>',
     },
   };
   Post.findById(id)

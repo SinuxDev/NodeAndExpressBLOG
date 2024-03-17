@@ -215,3 +215,11 @@ button,
 .noPost-Alert {
   margin-left: 100px;
 }
+
+.paginate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 20px;
+}

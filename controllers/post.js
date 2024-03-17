@@ -6,6 +6,7 @@ const fs = require("fs");
 const Expresspath = require("path");
 
 const fileDelete = require("../utils/fileDelete");
+const POST_PER_PAGE = 3;
 
 exports.createPost = (req, res, next) => {
   const { title, description } = req.body;
@@ -56,18 +57,40 @@ exports.renderCreatePage = (req, res, next) => {
 exports.renderHomePage = (req, res, next) => {
   // res.sendFile(path.join(__dirname, "..", "views", "homepage.html"));
   // const cookie = req.get("Cookie").split("=")[1].trim() == "true";
+
+  const pageNumber = +req.query.page || 1;
+  let totalPostNumber;
   Post.find()
-    .select("title")
-    .populate("userId", "email")
-    .sort({ title: 1 })
+    .countDocuments()
+    .then((totalPost) => {
+      totalPostNumber = totalPost;
+      return Post.find()
+        .select("title")
+        .populate("userId", "email")
+        .skip((pageNumber - 1) * POST_PER_PAGE) // page => 2 -1 = 1 || per page => 3 * 1 = 3
+        .limit(POST_PER_PAGE)
+        .sort({ createdAt: -1 });
+    })
     .then((posts) => {
-      res.render("home", {
-        title: "Home Page",
-        postsArr: posts,
-        currentUserEmail: req.session.userInfo
-          ? req.session.userInfo.email
-          : "",
-      });
+      if (posts.length > 0) {
+        return res.render("home", {
+          title: "Home Page",
+          postsArr: posts,
+          currentUserEmail: req.session.userInfo
+            ? req.session.userInfo.email
+            : "",
+          currentPage: pageNumber,
+          hasNextPage: POST_PER_PAGE * pageNumber < totalPostNumber,
+          hasPreviousPage: pageNumber > 1,
+          nextPage: pageNumber + 1,
+          previousPage: pageNumber - 1,
+        });
+      } else {
+        return res.status(500).render("error/500", {
+          title: "Something Went Wrong",
+          message: "There's no post you son of bitch",
+        });
+      }
     })
     .catch((err) => {
       console.log(err);

@@ -2,11 +2,10 @@
 <section class="details">
   <div class="details-div">
     <h1 class="title"><%= post.title %></h1>
-    <a href="/">Go Back</a>
   </div>
-  <p class="tmp">Posted by - <%= post.userId.email%></p>
+  <p class="tmp"><i class="fa-solid fa-user"></i> - <%= post.userId.email%></p>
   <% if(date) { %>
-  <p class="tmp">Uploaded at - <%= date %></p>
+  <p class="tmp"><i class="fa-solid fa-calendar-days"></i> - <%= date %></p>
   <% } %>
   <a href="/save/<%= post._id %>">Save as PDF</a>
   <img src="<%= '/' + post.imgUrl %>" alt="<% post.title %>" class="det-img" />

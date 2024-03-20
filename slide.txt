@@ -7,3 +7,6 @@ ejs
 How Does ejs work?
 
 node server data + templating engines => html->file (with dynamic content)
+
+<!-- <a href="/admin/create-post">
+              Add A New Post as <%=currentUserEmail ? currentUserEmail : "" %></a> -->

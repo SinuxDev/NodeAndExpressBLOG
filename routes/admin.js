@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const routes = express.Router();
 const postController = require("../controllers/post");
+const userController = require("../controllers/user");
 const { body } = require("express-validator");
 
 // /admin/create-post
@@ -42,5 +43,7 @@ routes.post(
 );
 
 routes.post("/delete/:postId", postController.deletePost);
+
+routes.get("/view-profile", userController.getProfile);
 
 module.exports = routes;

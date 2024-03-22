@@ -19,14 +19,14 @@ a {
 }
 
 /* for title */
-.post-box a{
+.post-box a {
   color: #000;
   background-color: transparent;
   padding: 0px 0px;
   text-decoration: underline;
 }
 
-.post-box-img{
+.post-box-img {
   width: 25%;
   height: 120px;
   object-fit: cover;
@@ -50,16 +50,16 @@ a {
 }
 
 .post-title {
-  font-size: 18px;
+  font-size: 16px;
   text-transform: uppercase;
   font-weight: 800;
 }
 
-.post-email{
+.post-email {
   font-size: 14px;
 }
 
-nav{
+nav {
   width: 60%;
   margin: 0 auto;
   display: flex;
@@ -69,13 +69,13 @@ nav{
   padding: 0px 20px;
 }
 
-nav div{
+nav div {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.header{
+.header {
   width: 75%;
   margin: 0 auto;
 }
@@ -134,8 +134,6 @@ button,
   width: 40%;
   margin: auto auto;
 }
-
-
 
 .details-div {
   display: flex;
@@ -246,4 +244,13 @@ button,
   justify-content: space-between;
   gap: 10px;
   margin: 10px 20px;
+}
+
+.public-user {
+  text-align: center;
+  margin: 40px 0px 20px 0px;
+}
+
+.public-user i {
+  font-size: 6rem;
 }

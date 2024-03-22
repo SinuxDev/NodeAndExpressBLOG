@@ -46,4 +46,15 @@ routes.post("/delete/:postId", postController.deletePost);
 
 routes.get("/view-profile", userController.getProfile);
 
+routes.get("/username", userController.renderUsernamePage);
+
+routes.post(
+  "/set-username",
+  body("username")
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage("Username must have at least 4 words"),
+  userController.setUsername
+);
+
 module.exports = routes;

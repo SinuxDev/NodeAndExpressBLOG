@@ -1,4 +1,6 @@
+const { validationResult } = require("express-validator");
 const Post = require("../models/post");
+const User = require("../models/user");
 
 const POST_PER_PAGE = 3;
 
@@ -80,6 +82,39 @@ exports.getPublicProfile = (req, res, next) => {
     .catch((err) => {
       console.log(err);
       const error = new Error("Someting Went Wrong");
+      return next(error);
+    });
+};
+
+exports.renderUsernamePage = (req, res, next) => {
+  res.render("user/username", {
+    title: "Set Username",
+    errorMsg: req.flash("error"),
+  });
+};
+
+exports.setUsername = (req, res, next) => {
+  const { username } = req.body;
+  const Updateusername = username.replace("@", "");
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("user/username", {
+      title: "Set Username",
+      errorMsg: errors.array()[0].msg,
+    });
+  }
+
+  User.findById(req.users._id)
+    .then((user) => {
+      user.username = `@${Updateusername}`;
+      return user.save().then(() => {
+        console.log("Username Added!");
+        res.redirect("/admin/view-profile");
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("User not found with this id");
       return next(error);
     });
 };

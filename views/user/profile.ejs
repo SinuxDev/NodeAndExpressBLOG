@@ -1,6 +1,15 @@
 <%- include("../includes/head") %>
 <section class="header">
-  <h1 class="title">Post by <%= currentUserEmail %></h1>
+  <div class="own-user">
+    <div class="ic-email">
+      <i class="fa-solid fa-circle-user"></i>
+      <p><%= currentUserEmail %></p>
+    </div>
+    <div>
+      <a href="/premium">Set Username</a>
+      <a href="/premium">Buy Premium</a>
+    </div>
+  </div>
   <div class="post-container">
     <% for(let post of postsArr){ %>
     <div class="post-box">

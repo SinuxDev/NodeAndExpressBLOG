@@ -251,6 +251,18 @@ button,
   margin: 40px 0px 20px 0px;
 }
 
-.public-user i {
+.public-user i,
+.own-user i {
   font-size: 6rem;
+}
+
+.own-user {
+  display: flex;
+  margin: 40px 0px 20px 0px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.own-user .ic-email {
+  text-align: center;
 }

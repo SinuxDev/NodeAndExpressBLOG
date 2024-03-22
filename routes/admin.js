@@ -57,4 +57,6 @@ routes.post(
   userController.setUsername
 );
 
+routes.get("/premium", userController.renderPremiumPage);
+
 module.exports = routes;

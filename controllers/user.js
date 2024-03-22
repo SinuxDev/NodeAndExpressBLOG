@@ -12,7 +12,7 @@ exports.getProfile = (req, res, next) => {
     .then((totalPost) => {
       totalPostNumber = totalPost;
       return Post.find({ userId: req.users._id })
-        .populate("userId", "email")
+        .populate("userId", "email username")
         .skip((pageNumber - 1) * POST_PER_PAGE) // page => 2 -1 = 1 || per page => 3 * 1 = 3
         .limit(POST_PER_PAGE)
         .sort({ createdAt: -1 });
@@ -117,4 +117,10 @@ exports.setUsername = (req, res, next) => {
       const error = new Error("User not found with this id");
       return next(error);
     });
+};
+
+exports.renderPremiumPage = (req, res) => {
+  res.render("user/premium", {
+    title: "Premium Page",
+  });
 };

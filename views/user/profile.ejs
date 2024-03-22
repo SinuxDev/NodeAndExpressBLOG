@@ -4,10 +4,13 @@
     <div class="ic-email">
       <i class="fa-solid fa-circle-user"></i>
       <p><%= currentUserEmail %></p>
+      <p>
+        <%= postsArr[0].userId.username ? postsArr[0].userId.username : "" %>
+      </p>
     </div>
     <div>
       <a href="/admin/username">Set Username</a>
-      <a href="/premium">Buy Premium</a>
+      <a href="/admin/premium">Buy WEIO Premium</a>
     </div>
   </div>
   <div class="post-container">

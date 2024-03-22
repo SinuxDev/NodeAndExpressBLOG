@@ -76,9 +76,7 @@ exports.renderHomePage = (req, res, next) => {
         return res.render("home", {
           title: "Home Page",
           postsArr: posts,
-          // currentUserEmail: req.session.userInfo
-          //   ? req.session.userInfo.email
-          //   : "",
+          currentUserID: req.session.userInfo ? req.session.userInfo._id : "",
           currentPage: pageNumber,
           hasNextPage: POST_PER_PAGE * pageNumber < totalPostNumber,
           hasPreviousPage: pageNumber > 1,

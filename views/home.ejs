@@ -17,9 +17,15 @@
         class="post-box-img"
       />
       <a href="/post/<%= post._id %>" class="post-title"><%= post.title %></a>
+      <% if(post.userId._id.toString() == currentUserID.toString()) { %>
+      <a href="/admin/view-profile" class="post-email"
+        ><span>Post By =></span><%= post.userId.email %></a
+      >
+      <% }else{ %>
       <a href="/profile/<%= post.userId._id %>" class="post-email"
         ><span>Post By =></span><%= post.userId.email %></a
       >
+      <% } %>
     </div>
     <% } %>
   </div>

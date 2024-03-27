@@ -303,3 +303,7 @@ button,
   margin-bottom: 10px;
   font-size: 18px;
 }
+
+.premium-username i {
+  font-size: 18px;
+}

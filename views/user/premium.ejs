@@ -7,7 +7,19 @@
       <li>Animate profile badges</li>
       <li>Can set username (Unlimited)</li>
     </ul>
-    <p>Buy WEIO Premium</p>
+    <button class="checkout-btn">Buy WEIO Premium</button>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      var stripe = Stripe(
+        "pk_test_51OypjB05dC3N5cEW3GzokzhhZgKhf0RX50B67Jq1YiecERJCgH7XnQuZGhSzSwp6flQvrWK6ntvx6fuRHOcZPOHI00EU8zxY3v"
+      );
+      var checkoutBtn = document.querySelector(".checkout-btn");
+      checkoutBtn.addEventListener("click", () => {
+        stripe.redirectToCheckout({
+          sessionId: "<%= session_Id %>",
+        });
+      });
+    </script>
   </div>
 </section>
 <%- include("../includes/foot") %>

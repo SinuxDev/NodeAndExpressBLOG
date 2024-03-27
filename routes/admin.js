@@ -59,4 +59,6 @@ routes.post(
 
 routes.get("/premium", userController.renderPremiumPage);
 
+routes.get("/subscription-success", userController.getSuccessPage);
+
 module.exports = routes;

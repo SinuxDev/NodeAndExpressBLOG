@@ -1,6 +1,9 @@
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 const User = require("../models/user");
+const stripe = require("stripe")(
+  "sk_test_51OypjB05dC3N5cEWXo2Zpvc5C8Lh5MrEVXitFKmxaNAPzgkh07pPn43rxIJtFZSosVdSHmhKP3OBKF4uWffwAHLn00NgfgMKSa"
+);
 
 const POST_PER_PAGE = 3;
 
@@ -119,8 +122,58 @@ exports.setUsername = (req, res, next) => {
     });
 };
 
-exports.renderPremiumPage = (req, res) => {
-  res.render("user/premium", {
-    title: "Premium Page",
-  });
+exports.renderPremiumPage = (req, res, next) => {
+  stripe.checkout.sessions
+    .create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: "price_1Oyqax05dC3N5cEWbNrtBsLI",
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      success_url: `${req.protocol}://${req.get(
+        "host"
+      )}/admin/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.protocol}://${req.get(
+        "host"
+      )}/admin/subscription-cancel`,
+    })
+    .then((stripe_session) => {
+      res.render("user/premium", {
+        title: "Premium Page",
+        session_Id: stripe_session.id,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Unexpected Error");
+      return next(error);
+    });
+};
+
+exports.getSuccessPage = (req, res, next) => {
+  const session_id = req.query.session_id;
+  if (!session_id) {
+    return res.redirect("/admin/view-profile");
+  }
+
+  User.findById(req.users._id)
+    .then((user) => {
+      user.isPremium = true;
+      user.payment_session_key = session_id;
+      return user.save();
+    })
+    .then(() => {
+      res.render("user/subscription-success", {
+        title: "Subscription Success Page",
+        susbscription_id: session_id,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error("Unexpected Error");
+      return next(error);
+    });
 };

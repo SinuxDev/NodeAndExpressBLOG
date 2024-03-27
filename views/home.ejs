@@ -19,11 +19,21 @@
       <a href="/post/<%= post._id %>" class="post-title"><%= post.title %></a>
       <% if(post.userId._id.toString() == currentUserID.toString()) { %>
       <a href="/admin/view-profile" class="post-email"
-        ><span>Post By =></span><%= post.userId.email %></a
+        ><span>Post By =></span> <% if(post.userId.isPremium) {%> <%=
+        post.userId.username %>
+        <i
+          class="fa-regular fa-star animate__animated animate__heartBeat animate__infinite infinite"
+        ></i>
+        <%}else{%><%=post.userId.email%> <%}%></a
       >
       <% }else{ %>
       <a href="/profile/<%= post.userId._id %>" class="post-email"
-        ><span>Post By =></span><%= post.userId.email %></a
+        ><span>Post By =></span><% if(post.userId.isPremium) {%> <%=
+        post.userId.username %>
+        <i
+          class="fa-regular fa-star animate__animated animate__heartBeat animate__infinite infinite"
+        ></i>
+        <%}else{%> <%=post.userId.email%> <%}%></a
       >
       <% } %>
     </div>

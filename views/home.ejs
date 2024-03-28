@@ -40,9 +40,7 @@
     <% } %>
   </div>
   <div class="paginate">
-    <% if(!hasNextPage && currentPage == 1){ %>
-    <a href="/?page=2">Next Page</a>
-    <% } %> <% if(hasNextPage) { %>
+    <% if(hasNextPage) { %>
     <a href="/?page=<%=nextPage %>">Next Page <%=nextPage %></a>
     <% } %> <% if(hasPreviousPage) { %>
     <a href="/?page=<%=previousPage %>">Previous Page <%=previousPage %></a>
